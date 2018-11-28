@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -22,10 +23,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Duration _duration;
 
-  void _incrementCounter() {
-    setState(() { _counter++; });
+  void _goCompute() {
+    compute(timedTest,null,debugLabel: "Timed Test")
+        .then(setDuration);
+
+  }
+
+  int setDuration(Duration duration) {
+    setState(() { _duration = duration; });
   }
 
   @override
@@ -38,16 +45,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('You have pushed the button this many times:',),
-            Text('$_counter',),
+            Text('It took this long',),
+            Text('$_duration',),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _goCompute,
+        tooltip: 'Go',
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  static Duration timedTest(x) {
+    final start = DateTime.now();
+    final end = DateTime.now();
+    return end.difference(start);
   }
 }
