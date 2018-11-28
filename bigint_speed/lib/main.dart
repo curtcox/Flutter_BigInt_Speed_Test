@@ -31,9 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
-  int setDuration(Duration duration) {
-    setState(() { _duration = duration; });
-  }
+  int setDuration(Duration duration) { setState(() { _duration = duration; }); }
+  String get duration => _duration == null ? "No results" : "It took " + _duration.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('It took this long',),
-            Text('$_duration',),
+            Text(duration,),
           ],
         ),
       ),
