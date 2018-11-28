@@ -23,16 +23,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Duration _duration;
+  String _results;
 
   void _goCompute() {
     compute(timedTest,null,debugLabel: "Timed Test")
         .then(setDuration);
-
   }
 
-  int setDuration(Duration duration) { setState(() { _duration = duration; }); }
-  String get duration => _duration == null ? "No results" : "It took " + _duration.toString();
+  void setDuration(String duration) { setState(() { _results = duration; }); }
+  String get duration => _results == null ? "No results" : _results;
 
   @override
   Widget build(BuildContext context) {
@@ -56,30 +55,27 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  static Duration timedTest(x) {
-    final start = now();
-    testBigIntSpeed();
-    final end = now();
-    return end.difference(start);
-  }
-
-  static testBigIntSpeed() {
+  static String timedTest(x) {
+    var out = "";
     var x = BigInt.from(5);
     var y = BigInt.from(2);
+
     for (int i=0; i<7; i++) {
       x = x.pow(5);
       y = y.pow(3) + BigInt.from(1);
-      perf("$i",() => x.modPow(x, y) );
+      out = out + "$i " + perf(() => x.modPow(x, y) ) + "\n";
     }
+    return out;
   }
 
-  static perf(message, f) {
+  static String perf(f) {
     final start = now();
     final result = f();
     final end = now();
     final duration = end.difference(start);
-    print("$message $duration");
-    return result;
+    final message = "$duration ${result.bitLength}";
+    print(message);
+    return message;
   }
   
   static now() => DateTime.now();
