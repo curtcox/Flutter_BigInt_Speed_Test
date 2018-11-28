@@ -23,15 +23,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _running = false;
   String _results;
 
   void _goCompute() {
+    setState(() { _running = true; });
     compute(timedTest,null,debugLabel: "Timed Test")
         .then(setDuration);
   }
 
-  void setDuration(String duration) { setState(() { _results = duration; }); }
-  String get duration => _results == null ? "No results" : _results;
+  void setDuration(String duration) {
+    setState(() {
+      _results = duration;
+      _running = false;
+    });
+  }
+  String get duration => _results == null ? "Tap the button to generate new times." : _results;
+
+  Widget _computeButton() {
+    return new RaisedButton(
+      child: new Text(
+          _running ? "Computing..." : "Compute"
+      ),
+      onPressed: _running ? null : _goCompute,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(duration,),
+            _computeButton(),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _goCompute,
-        tooltip: 'Go',
-        child: Icon(Icons.add),
       ),
     );
   }
@@ -60,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var x = BigInt.from(5);
     var y = BigInt.from(2);
 
-    for (int i=0; i<7; i++) {
+    for (int i=1; i<8; i++) {
       x = x.pow(5);
       y = y.pow(3) + BigInt.from(1);
       out = out + "$i " + perf(() => x.modPow(x, y) ) + "\n";
