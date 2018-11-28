@@ -59,8 +59,30 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   static Duration timedTest(x) {
-    final start = DateTime.now();
-    final end = DateTime.now();
+    final start = now();
+    testBigIntSpeed();
+    final end = now();
     return end.difference(start);
   }
+
+  static testBigIntSpeed() {
+    var x = BigInt.from(5);
+    var y = BigInt.from(2);
+    for (int i=0; i<7; i++) {
+      x = x.pow(5);
+      y = y.pow(3) + BigInt.from(1);
+      perf("$i",() => x.modPow(x, y) );
+    }
+  }
+
+  static perf(message, f) {
+    final start = now();
+    final result = f();
+    final end = now();
+    final duration = end.difference(start);
+    print("$message $duration");
+    return result;
+  }
+  
+  static now() => DateTime.now();
 }
